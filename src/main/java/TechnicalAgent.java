@@ -115,7 +115,6 @@ public class TechnicalAgent extends Agent{
                     Order order1 = new Order(this, time, orderPrice, ORDER_NUM, this.tradeFlag);
                     market.addOrder(order1);
                     
-                    // 株式を所有していない場合は1回だけの注文に制限
                     if(this.position != 0) {
                         if(secondOrderPrice > 0 && pastmarketPrice < secondOrderPrice) {
                             Order order2 = new Order(this, time, secondOrderPrice, ORDER_NUM, this.tradeFlag);
@@ -134,7 +133,6 @@ public class TechnicalAgent extends Agent{
                     Order order1 = new Order(this, time, orderPrice, ORDER_NUM, this.tradeFlag);
                     market.addOrder(order1);
                     
-                    // 株式を所有していない場合は1回だけの注文に制限
                     if(this.position != 0) {
                         if(secondOrderPrice > 0 && pastmarketPrice > secondOrderPrice) {
                             Order order2 = new Order(this, time, secondOrderPrice, ORDER_NUM, this.tradeFlag);
