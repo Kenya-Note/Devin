@@ -112,8 +112,12 @@ public class FundamentalAgent extends Agent{
                     market.addOrder(order1);
                     
                     if(this.position != 0) {
-                        if(secondOrderPrice > 0 && secondOrderPrice < this.pf) {
+                        if(secondOrderPrice > 0) {
                             Order order2 = new Order(this, time, secondOrderPrice, ORDER_NUM, this.tradeFlag);
+                            market.addOrder(order2);
+                        } 
+                        else {
+                            Order order2 = new Order(this, time, orderPrice, ORDER_NUM, this.tradeFlag);
                             market.addOrder(order2);
                         }
                     }
@@ -130,8 +134,12 @@ public class FundamentalAgent extends Agent{
                     market.addOrder(order1);
                     
                     if(this.position != 0) {
-                        if(secondOrderPrice > 0 && secondOrderPrice > this.pf) {
+                        if(secondOrderPrice > 0) {
                             Order order2 = new Order(this, time, secondOrderPrice, ORDER_NUM, this.tradeFlag);
+                            market.addOrder(order2);
+                        }
+                        else {
+                            Order order2 = new Order(this, time, orderPrice, ORDER_NUM, this.tradeFlag);
                             market.addOrder(order2);
                         }
                     }
