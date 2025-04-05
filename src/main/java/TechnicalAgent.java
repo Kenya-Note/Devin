@@ -108,7 +108,6 @@ public class TechnicalAgent extends Agent{
 			// 買い注文の場合
             if(this.tradeFlag == Flag.Trade.BUY) {
                 orderPrice = market.getBestAsk();
-                secondOrderPrice = market.getSecondBestAsk();
                 
                 if(orderPrice > 0) {
                     // 1回目の注文 - 現在の最良売り気配値で成行注文
@@ -116,12 +115,10 @@ public class TechnicalAgent extends Agent{
                     market.addOrder(order1);
                     
                     if(this.position != 0) {
-                        if(secondOrderPrice > 0) {
+                        secondOrderPrice = market.getSecondBestAsk();
+                        
+                        if(secondOrderPrice > 0 && pastmarketPrice < secondOrderPrice) {
                             Order order2 = new Order(this, time, secondOrderPrice, ORDER_NUM, this.tradeFlag);
-                            market.addOrder(order2);
-                        }
-                        else {
-                            Order order2 = new Order(this, time, orderPrice, ORDER_NUM, this.tradeFlag);
                             market.addOrder(order2);
                         }
                     }
@@ -130,7 +127,6 @@ public class TechnicalAgent extends Agent{
             // 売り注文の場合
             else if(this.tradeFlag == Flag.Trade.SELL) {
                 orderPrice = market.getBestBid();
-                secondOrderPrice = market.getSecondBestBid();
                 
                 if(orderPrice > 0) {
                     // 1回目の注文 - 現在の最良買い気配値で成行注文
@@ -138,17 +134,15 @@ public class TechnicalAgent extends Agent{
                     market.addOrder(order1);
                     
                     if(this.position != 0) {
-                        if(secondOrderPrice > 0) {
+                        secondOrderPrice = market.getSecondBestBid();
+                        
+                        if(secondOrderPrice > 0 && pastmarketPrice > secondOrderPrice) {
                             Order order2 = new Order(this, time, secondOrderPrice, ORDER_NUM, this.tradeFlag);
-                            market.addOrder(order2);
-                        }
-                        else {
-                            Order order2 = new Order(this, time, orderPrice, ORDER_NUM, this.tradeFlag);
                             market.addOrder(order2);
                         }
                     }
                 }
-            } 
+            }
             // その他の場合（通常はこの分岐には入らない）
             else {
                 // 1回目の注文
