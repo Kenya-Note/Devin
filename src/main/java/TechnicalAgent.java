@@ -102,34 +102,45 @@ public class TechnicalAgent extends Agent{
 
 			// 市場に注文を出す
 			double orderPrice;
+			double secondOrderPrice;
+			double pastmarketPrice = market.getPreMarketPrice(PAST_TIME, time);
+			
 			// 買い注文の場合
             if(this.tradeFlag == Flag.Trade.BUY) {
-                // 1回目の注文 - 現在の最良売り気配値で成行注文
-                orderPrice = market.getBestAsk(); // 最新の最良売り気配値を取得
-                Order order1 = new Order(this, time, orderPrice, ORDER_NUM, this.tradeFlag);
-			    market.addOrder(order1);
+                orderPrice = market.getBestAsk();
+                secondOrderPrice = market.getSecondBestAsk();
                 
-                // 株式を所有していない場合は1回だけの注文に制限
-                if(this.position != 0) {
-                    // 2回目の注文 - 再度最新の最良売り気配値を取得して成行注文
-                    orderPrice = market.getBestAsk();
-                    Order order2 = new Order(this, time, orderPrice, ORDER_NUM, this.tradeFlag);
-			        market.addOrder(order2);
+                if(orderPrice > 0) {
+                    // 1回目の注文 - 現在の最良売り気配値で成行注文
+                    Order order1 = new Order(this, time, orderPrice, ORDER_NUM, this.tradeFlag);
+                    market.addOrder(order1);
+                    
+                    // 株式を所有していない場合は1回だけの注文に制限
+                    if(this.position != 0) {
+                        if(secondOrderPrice > 0 && pastmarketPrice < secondOrderPrice) {
+                            Order order2 = new Order(this, time, secondOrderPrice, ORDER_NUM, this.tradeFlag);
+                            market.addOrder(order2);
+                        }
+                    }
                 }
             } 
             // 売り注文の場合
             else if(this.tradeFlag == Flag.Trade.SELL) {
-                // 1回目の注文 - 現在の最良買い気配値で成行注文
-                orderPrice = market.getBestBid(); // 最新の最良買い気配値を取得
-                Order order1 = new Order(this, time, orderPrice, ORDER_NUM, this.tradeFlag);
-			    market.addOrder(order1);
+                orderPrice = market.getBestBid();
+                secondOrderPrice = market.getSecondBestBid();
                 
-                // 株式を所有していない場合は1回だけの注文に制限
-                if(this.position != 0) {
-                    // 2回目の注文 - 再度最新の最良買い気配値を取得して成行注文
-                    orderPrice = market.getBestBid();
-                    Order order2 = new Order(this, time, orderPrice, ORDER_NUM, this.tradeFlag);
-			        market.addOrder(order2);
+                if(orderPrice > 0) {
+                    // 1回目の注文 - 現在の最良買い気配値で成行注文
+                    Order order1 = new Order(this, time, orderPrice, ORDER_NUM, this.tradeFlag);
+                    market.addOrder(order1);
+                    
+                    // 株式を所有していない場合は1回だけの注文に制限
+                    if(this.position != 0) {
+                        if(secondOrderPrice > 0 && pastmarketPrice > secondOrderPrice) {
+                            Order order2 = new Order(this, time, secondOrderPrice, ORDER_NUM, this.tradeFlag);
+                            market.addOrder(order2);
+                        }
+                    }
                 }
             } 
             // その他の場合（通常はこの分岐には入らない）

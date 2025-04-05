@@ -645,6 +645,14 @@ public class Market {
 		}
 	}
 	
+	public double getSecondBestBid() {
+		if(this.buyBook.size() > 1) {
+			return this.buyBook.get(1).getOrderPrice();
+		}
+		else {
+			return 0;
+		}
+	}
 
 	// 最良売り価格
 	public double getBestAsk() {
@@ -668,6 +676,15 @@ public class Market {
 		}
 		else {
 			return 0.0;
+		}
+	}
+	
+	public double getSecondBestAsk() {
+		if(this.sellBook.size() > 1) {
+			return this.sellBook.get(1).getOrderPrice();
+		}
+		else {
+			return 0;
 		}
 	}
 	// 買いのデプス
